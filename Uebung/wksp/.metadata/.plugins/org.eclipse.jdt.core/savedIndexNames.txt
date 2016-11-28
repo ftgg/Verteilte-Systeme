@@ -1,0 +1,22 @@
+INDEX VERSION 1.127+Z:\SEM5\Verteilte Systeme\Uebung\wksp\.metadata\.plugins\org.eclipse.jdt.core
+69682449.index
+2407591640.index
+3508997439.index
+1047353270.index
+1545417735.index
+3124835187.index
+3082400079.index
+2569705209.index
+1750058806.index
+1745553393.index
+1280305850.index
+2510392829.index
+668898245.index
+1995363533.index
+2477846846.index
+3677605692.index
+455560408.index
+1294244358.index
+2036858435.index
+3338684372.index
+1728642882.index

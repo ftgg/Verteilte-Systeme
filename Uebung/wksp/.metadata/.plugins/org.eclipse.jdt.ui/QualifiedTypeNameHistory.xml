@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="messaging.Endpoint"/>
+<fullyQualifiedTypeName name="messaging.Message"/>
+<fullyQualifiedTypeName name="aqua.blatt1.common.msgtypes.RegisterRequest"/>
+<fullyQualifiedTypeName name="aqua.blatt1.common.msgtypes.RegisterResponse"/>
+<fullyQualifiedTypeName name="aqua.blatt1.common.msgtypes.DeregisterRequest"/>
+<fullyQualifiedTypeName name="aqua.blatt1.common.msgtypes.HandoffRequest"/>
+<fullyQualifiedTypeName name="aqua.blatt1.common.FishModel"/>
+<fullyQualifiedTypeName name="aqua.blatt2.broker.PoisonPill"/>
+<fullyQualifiedTypeName name="java.util.concurrent.locks.ReadWriteLock"/>
+<fullyQualifiedTypeName name="java.util.concurrent.ExecutorService"/>
+<fullyQualifiedTypeName name="java.util.concurrent.locks.ReentrantReadWriteLock"/>
+<fullyQualifiedTypeName name="java.util.concurrent.Executors"/>
+<fullyQualifiedTypeName name="aqua.blatt1.common.Direction"/>
+<fullyQualifiedTypeName name="java.net.InetSocketAddress"/>
+<fullyQualifiedTypeName name="aqua.blatt1.common.msgtypes.NeighborUpdate"/>
+<fullyQualifiedTypeName name="java.util.TimerTask"/>
+<fullyQualifiedTypeName name="aqua.blatt1.common.msgtypes.Token"/>
+<fullyQualifiedTypeName name="aqua.blatt1.client.Recordingstate"/>
+<fullyQualifiedTypeName name="aqua.blatt1.client.Snapshot"/>
+<fullyQualifiedTypeName name="aqua.blatt1.common.msgtypes.SnapshotCollector"/>
+<fullyQualifiedTypeName name="java.io.Serializable"/>
+<fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
+<fullyQualifiedTypeName name="javax.swing.SwingUtilities"/>
+<fullyQualifiedTypeName name="aqua.blatt1.common.msgtypes.SnapshotMarker"/>
+</qualifiedTypeNameHistroy>
