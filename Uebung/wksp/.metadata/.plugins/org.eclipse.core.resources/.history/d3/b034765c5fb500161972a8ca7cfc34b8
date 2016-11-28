@@ -1,0 +1,19 @@
+package aqua.blatt1.client;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class ToggleController implements ActionListener {
+	private final TankModel tankModel;
+	
+	ToggleController(TankModel tm){
+		tankModel = tm;
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+
+	}
+
+}

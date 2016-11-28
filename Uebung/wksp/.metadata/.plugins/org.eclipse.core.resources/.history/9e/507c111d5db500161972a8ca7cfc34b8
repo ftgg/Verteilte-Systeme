@@ -2,9 +2,7 @@ package aqua.blatt1.client;
 
 import java.net.InetSocketAddress;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Observable;
 import java.util.Random;
 import java.util.Set;
@@ -38,14 +36,14 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 	private Snapshot localSnap;
 	private volatile RecordingState tankRecState = RecordingState.IDLE;
 	private volatile boolean snapshotinitiator = false;
-	private volatile Map<FishModel,FishReference> fishRefMap;
-	
+
 	public synchronized void initiateSnapshot() {
 		localSnap = new Snapshot(fishCounter);
 		snapshotinitiator = true;
 		tankRecState = RecordingState.BOTH;
 		forwarder.sendMarker(leftNeighbor);
 		forwarder.sendMarker(rightNeighbor);
+		System.out.println("starte Snapshot");
 	}
 
 	public void setRightNeighbor(InetSocketAddress rightNeighbor) {
@@ -59,7 +57,6 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 	public TankModel(ClientCommunicator.ClientForwarder forwarder) {
 		this.fishies = Collections.newSetFromMap(new ConcurrentHashMap<FishModel, Boolean>());
 		this.forwarder = forwarder;
-		fishRefMap = new HashMap<FishModel,FishReference>();
 	}
 
 	synchronized void onRegistration(String id) {
@@ -76,7 +73,6 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 					rand.nextBoolean() ? Direction.LEFT : Direction.RIGHT);
 
 			fishies.add(fish);
-			fishRefMap.put(fish,FishReference.HERE);
 		}
 	}
 
@@ -91,7 +87,6 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 				;
 		else if (tankRecState == RecordingState.BOTH || tankRecState == RecordingState.RIGHT)
 			localSnap.combine(new Snapshot(1));
-		fishRefMap.put(fish,FishReference.HERE);
 	}
 
 	public synchronized void receiveMarker(InetSocketAddress sender) {
@@ -162,13 +157,10 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 
 			if (fish.hitsEdge()) {
 				if (hasToken) {
-					if (fish.getDirection() == Direction.LEFT){
-						fishRefMap.put(fish,FishReference.LEFT);
+					if (fish.getDirection() == Direction.LEFT)
 						forwarder.handOff(leftNeighbor, fish);
-					}else{
-						fishRefMap.put(fish,FishReference.RIGHT);
+					else
 						forwarder.handOff(rightNeighbor, fish);
-					}
 				} else {
 					fish.reverse();
 				}
@@ -224,18 +216,5 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 				JOptionPane.showMessageDialog(null, "Anzahl Fische: " + snapShot.getValue());
 			}
 		});
-	}
-
-	public void locateFishGlobally(FishModel fish) {
-		FishReference fishRef = fishRefMap.get(fish);
-		if(fishRef == FishReference.HERE)
-			locateFishLocally(fish);
-		//else if(fishRef == FishReference.LEFT)
-			//TODO endpoint.send(leftNeighbor
-			
-	}
-	
-	private void locateFishLocally(FishModel fish) {
-		fish.toggle();
 	}
 }

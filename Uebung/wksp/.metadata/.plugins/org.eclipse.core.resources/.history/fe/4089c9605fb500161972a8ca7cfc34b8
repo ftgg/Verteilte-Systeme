@@ -230,7 +230,7 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 		FishReference fishRef = fishRefMap.get(fish);
 		if(fishRef == FishReference.HERE)
 			locateFishLocally(fish);
-		//else if(fishRef == FishReference.LEFT)
+		else if(fishRef == FishReference.LEFT)
 			//TODO endpoint.send(leftNeighbor
 			
 	}
