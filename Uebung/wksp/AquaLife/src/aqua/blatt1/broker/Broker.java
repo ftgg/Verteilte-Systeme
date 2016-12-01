@@ -1,6 +1,8 @@
 package aqua.blatt1.broker;
 
 import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -10,6 +12,8 @@ import aqua.blatt1.common.Direction;
 import aqua.blatt1.common.FishModel;
 import aqua.blatt1.common.msgtypes.DeregisterRequest;
 import aqua.blatt1.common.msgtypes.HandoffRequest;
+import aqua.blatt1.common.msgtypes.NameResolutionRequest;
+import aqua.blatt1.common.msgtypes.NameResolutionResponse;
 import aqua.blatt1.common.msgtypes.NeighborUpdate;
 import aqua.blatt1.common.msgtypes.RegisterResponse;
 import aqua.blatt1.common.msgtypes.Token;
@@ -26,12 +30,14 @@ public class Broker {
 	private ReadWriteLock clientlock = new ReentrantReadWriteLock();
 	Thread stopthread;
 	protected volatile boolean stoprequestFlag = false;
+	protected volatile Map<String,InetSocketAddress> nameResolutionTable;
 
 	public Broker(int port) {
 		endpoint = new Endpoint(port);
 		clients = new ClientCollection<InetSocketAddress>();
 		threadPool = Executors.newFixedThreadPool(THREAD_COUNT);
 		stopthread = new Thread(new StopDialog(this));
+		nameResolutionTable = new HashMap<String,InetSocketAddress>();
 	}
 
 	public void listen() {
@@ -71,6 +77,11 @@ public class Broker {
 			case "HandoffRequest":
 				handoff(message);
 				break;
+			case "NameResolutionRequest":
+				performNameResolution(message);
+				break;
+			default:
+				System.out.println("ERROR beim Broker empfangen");
 			}
 		}
 
@@ -81,12 +92,12 @@ public class Broker {
 			clientlock.writeLock().lock();
 			String id = "tank" + clients.size();
 			
+			
 			//Send Token to first client
 			boolean send_token = (clients.size() == 0);
 			
 			clients.add(id, sender);
 			clientlock.writeLock().unlock();
-			
 			
 			clientlock.readLock().lock();
 			
@@ -99,6 +110,10 @@ public class Broker {
 			
 			clientlock.readLock().unlock();
 			
+			synchronized (nameResolutionTable) {
+				nameResolutionTable.put(id, sender);
+			}
+			
 			endpoint.send(sender, new RegisterResponse(id));
 		}
 
@@ -106,6 +121,7 @@ public class Broker {
 			System.out.println("Deregister");
 			InetSocketAddress leftN, rightN;
 
+			
 			clientlock.writeLock().lock();
 
 			DeregisterRequest request = (DeregisterRequest) message.getPayload();
@@ -122,6 +138,11 @@ public class Broker {
 			}
 
 			clientlock.writeLock().unlock();
+			
+			synchronized (nameResolutionTable) {
+				nameResolutionTable.remove("tank" + id);
+			}
+			
 		}
 
 		private void handoff(Message message) {
@@ -151,6 +172,13 @@ public class Broker {
 
 	}
 
+	private void performNameResolution(Message message){
+		NameResolutionRequest nameResRequ = (NameResolutionRequest) message.getPayload();
+		InetSocketAddress tankAdress = nameResolutionTable.get(nameResRequ.getTankID());
+		endpoint.send(message.getSender(), new NameResolutionResponse(nameResRequ,tankAdress));
+	}
+	
+	
 	public static void main(String[] args) {
 		Broker broker = new Broker(4711);
 		broker.listen();

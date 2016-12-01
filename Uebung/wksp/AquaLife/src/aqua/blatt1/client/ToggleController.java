@@ -18,12 +18,6 @@ public class ToggleController implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String fishID = ((JMenuItem) e.getSource()).getText();
 		tankModel.locateFishGlobally(fishID);
-//		for (FishModel f : tankModel.fishies) {
-//			if (f.getId().equals(fishID)) {
-//				tankModel.locateFishGlobally(f);
-//				break;
-//			}
-//		}
 	}
 
 }
