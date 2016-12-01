@@ -8,6 +8,7 @@ import aqua.blatt1.common.FishModel;
 import aqua.blatt1.common.Properties;
 import aqua.blatt1.common.msgtypes.DeregisterRequest;
 import aqua.blatt1.common.msgtypes.HandoffRequest;
+import aqua.blatt1.common.msgtypes.LocationRequest;
 import aqua.blatt1.common.msgtypes.NeighborUpdate;
 import aqua.blatt1.common.msgtypes.RegisterRequest;
 import aqua.blatt1.common.msgtypes.RegisterResponse;
@@ -52,6 +53,10 @@ public class ClientCommunicator {
 		public void sendCollector(InetSocketAddress neighbor, SnapshotCollector snc) {
 			endpoint.send(neighbor, snc);
 		}
+		
+		public void sendLocationRequest(InetSocketAddress neighbor, String fish){
+			endpoint.send(neighbor, new LocationRequest(fish));
+		}
 	}
 
 	public class ClientReceiver extends Thread {
@@ -80,6 +85,8 @@ public class ClientCommunicator {
 					tankModel.receiveMarker(msg.getSender());
 				else if (msg.getPayload() instanceof SnapshotCollector)
 					tankModel.receiveCollector((SnapshotCollector) msg.getPayload());
+				else if(msg.getPayload() instanceof LocationRequest)
+					tankModel.receiveLocationRequest((LocationRequest) msg.getPayload());
 
 			}
 			System.out.println("Receiver stopped.");
