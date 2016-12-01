@@ -202,6 +202,7 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 	}
 
 	public synchronized void finish() {
+		while(hasToken);
 		forwarder.deregister(id);
 	}
 
@@ -243,7 +244,7 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 		locateFishLocally(payload.getFish());
 	}
 
-	public void locateFishGlobally(String fishID) {	
+	public synchronized void locateFishGlobally(String fishID) {	
 		InetSocketAddress targetTank = homeAgent.get(fishID);
 		if (targetTank == null) {
 			locateFishLocally(fishID);
@@ -254,7 +255,7 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 		}
 	}
 	
-	public void performNameResolution(String fishID, String tankID) {
+	public synchronized void performNameResolution(String fishID, String tankID) {
 		if(homeAgent.containsKey(fishID))
 			homeAgent.put(fishID, null);
 		else
@@ -265,7 +266,7 @@ public class TankModel extends Observable implements Iterable<FishModel> {
 		forwarder.sendLocationUpdate(nameResResp.getAddress(), nameResResp.getRequestID());
 	}
 	
-	public void receiveLocationUpdate(InetSocketAddress newLocation, String fishID){
+	public synchronized void receiveLocationUpdate(InetSocketAddress newLocation, String fishID){
 		homeAgent.put(fishID, newLocation);
 	}
 	
